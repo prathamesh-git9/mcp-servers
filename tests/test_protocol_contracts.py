@@ -3,6 +3,7 @@ from pathlib import Path
 
 import pytest
 from ats_jobs.server import create_server as create_ats_server
+from coding_workflows.server import create_server as create_coding_server
 from grounded_cv.server import create_server as create_cv_server
 from mcp import Client
 from mcp_server_common import FailureCode, run_bounded
@@ -36,6 +37,7 @@ async def test_manifest_matches_live_protocol_and_every_tool_has_output_schema(
         "repo-intel": create_repo_server,
         "web-research": create_web_server,
         "ats-jobs": create_ats_server,
+        "coding-workflows": create_coding_server,
         "outcome-ledger": lambda: create_ledger_server(
             OutcomeLedgerStore(tmp_path / "manifest-ledger.sqlite3")
         ),
