@@ -1,0 +1,25 @@
+[build-system]
+requires = ["hatchling>=1.27"]
+build-backend = "hatchling.build"
+
+[project]
+name = "outcome-ledger-mcp"
+version = "0.1.0"
+description = "Crash-aware SQLite idempotency ledger over MCP"
+requires-python = ">=3.11"
+license = "MIT"
+dependencies = [
+    "mcp>=2,<3",
+    "mcp-server-suite-common==0.1.0",
+    "pydantic>=2.12,<3",
+]
+
+[project.scripts]
+outcome-ledger = "outcome_ledger.server:main"
+
+[tool.uv.sources]
+mcp-server-suite-common = { workspace = true }
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/outcome_ledger"]
+
