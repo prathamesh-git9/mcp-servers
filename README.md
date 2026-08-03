@@ -1,4 +1,4 @@
-# Five production-minded MCP servers
+# Six production-minded MCP servers
 
 [![CI](https://github.com/prathamesh-git9/mcp-servers/actions/workflows/ci.yml/badge.svg)](https://github.com/prathamesh-git9/mcp-servers/actions/workflows/ci.yml)
 [![Python 3.11–3.13](https://img.shields.io/badge/Python-3.11–3.13-3776AB)](https://www.python.org/)
@@ -16,7 +16,8 @@ uv run pytest -q
 
 That runs a real BM25 + dense + reciprocal-rank-fusion evaluation and the entire
 socket-restricted test suite. Each server is directly runnable with `uv run grounded-cv`,
-`uv run repo-intel`, `uv run web-research`, `uv run ats-jobs`, or `uv run outcome-ledger`.
+`uv run repo-intel`, `uv run web-research`, `uv run ats-jobs`,
+`uv run outcome-ledger`, or `uv run coding-workflows`.
 
 ## `claude_desktop_config.json`
 
@@ -74,6 +75,16 @@ the public repository and caches the environment locally.
         "--with",
         "git+https://github.com/prathamesh-git9/mcp-servers.git#subdirectory=packages/common",
         "outcome-ledger"
+      ]
+    },
+    "coding-workflows": {
+      "command": "uvx",
+      "args": [
+        "--from",
+        "git+https://github.com/prathamesh-git9/mcp-servers.git#subdirectory=packages/coding-workflows",
+        "--with",
+        "git+https://github.com/prathamesh-git9/mcp-servers.git#subdirectory=packages/common",
+        "coding-workflows"
       ]
     }
   }
@@ -139,6 +150,17 @@ the public repository and caches the environment locally.
         "git+https://github.com/prathamesh-git9/mcp-servers.git#subdirectory=packages/common",
         "outcome-ledger"
       ]
+    },
+    "coding-workflows": {
+      "type": "stdio",
+      "command": "uvx",
+      "args": [
+        "--from",
+        "git+https://github.com/prathamesh-git9/mcp-servers.git#subdirectory=packages/coding-workflows",
+        "--with",
+        "git+https://github.com/prathamesh-git9/mcp-servers.git#subdirectory=packages/common",
+        "coding-workflows"
+      ]
     }
   }
 }
@@ -153,6 +175,7 @@ flowchart LR
     C --> W[web-research]
     C --> A[ats-jobs]
     C --> O[outcome-ledger]
+    C --> CW[coding-workflows]
 
     G --> H[BM25 + 384-D dense vectors + RRF]
     G --> P[(Committed structured profile)]
@@ -160,11 +183,12 @@ flowchart LR
     W --> RB[URL policy + robots.txt + extractor]
     A --> ATS[Six public ATS APIs]
     O --> SQ[(SQLite WAL / FULL sync)]
+    CW --> RC[Local repo structure + configured quality gates]
 
-    G & R & W & A & O --> CORE["Shared typed failures, deadlines, redaction,<br/>rate limiting and cache"]
+    G & R & W & A & O & CW --> CORE["Shared typed failures, deadlines, redaction,<br/>rate limiting and cache"]
 ```
 
-The repository is a six-package workspace: one small shared core and one independently
+The repository is a seven-package workspace: one small shared core and one independently
 installable package for each server. Every server exposes tools, resources, and at least
 one prompt over the official MCP Python SDK's stdio transport.
 
@@ -177,6 +201,7 @@ one prompt over the official MCP Python SDK's stdio transport.
 | **web-research** | Search plus main-content extraction with fail-closed robots checks, SSRF protection, redirect/size limits, and per-host pacing. |
 | **ats-jobs** | One typed model across public Greenhouse, Lever, Ashby, Workable, SmartRecruiters, and Recruitee boards. |
 | **outcome-ledger** | Durable deterministic idempotency keys and an honest `outcome_unknown` state after a simulated process crash. |
+| **coding-workflows** | Unified-diff review, dependency-aware planning, bounded repo gates, traceback-to-file triage, and conventional commit synthesis. |
 
 The complete machine-readable catalog is pinned at [`docs/manifest.json`](docs/manifest.json),
 and the detailed protocol contract is in [`docs/API.md`](docs/API.md).
@@ -219,6 +244,9 @@ network service.
   cross a tool boundary.
 - GitHub, web, and ATS text is explicitly marked `content_is_untrusted`; prompts instruct
   clients not to execute instructions found inside it.
+- Coding diffs, tracebacks, repository text, and gate output are untrusted. Quality gates
+  use shell-free argv execution, credential-reduced environments, and hard deadlines;
+  configured package-manager scripts should run only in repositories the caller trusts.
 - URL credentials, private networks, authenticated scraping, mutation APIs, and
   secret-shaped ledger fields are rejected. Optional `GITHUB_TOKEN` improves GitHub rate
   limits but is never returned or logged.

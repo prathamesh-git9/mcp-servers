@@ -1,6 +1,6 @@
 # MCP API contract
 
-All five processes speak JSON-RPC over MCP stdio using the official Python SDK 2.0.
+All six processes speak JSON-RPC over MCP stdio using the official Python SDK 2.0.
 Every tool returns a Pydantic v2 structured object. Tool failures are values, not raised
 transport exceptions.
 
@@ -110,3 +110,30 @@ system rather than repeat the effect blindly. The database uses WAL, `synchronou
 and `BEGIN IMMEDIATE` transactions. Set `OUTCOME_LEDGER_DB` to override its platform data
 directory.
 
+## coding-workflows
+
+Tools:
+
+- `review_diff(diff_text, max_findings=50)` parses a standard unified diff and returns
+  findings with `file`, old/new `line`, `side`, `severity`, `category`, `rule_id`, safe
+  evidence, and rationale.
+- `plan_change(request, repo_path=null, max_steps=7)` returns an ordered task graph. Every
+  step has explicit dependencies, likely files, and acceptance criteria.
+- `run_checks(repo_path=null, categories=null, timeout_seconds=60)` detects and executes
+  configured format, lint, and test gates. Each gate reports argv, category, status,
+  exit code, duration, and bounded redacted output; a nonzero exit or runner fault is
+  returned as data rather than raised.
+- `triage_failure(failure_text, repo_path=null, max_candidates=10)` maps traceback frames,
+  test node IDs, symbols, and tool errors onto ranked files from the repository itself.
+- `commit_message(staged_diff)` returns a conventional header plus a body summarizing the
+  staged file and line impact.
+
+Resources: `coding://toolchain` and `coding://checks`.
+Prompt: `guarded-review(change_request)`.
+
+The default repository is the server process working directory. Repository commands are
+passed as argv directly, never through an MCP-side shell; output is size-capped and common
+credential shapes are redacted. The runner strips common credential variables and places
+both each gate and the entire MCP call under deadlines. Because tools such as `npm run`
+execute scripts committed by the target repository, callers must use `run_checks` only on
+repositories they trust.
