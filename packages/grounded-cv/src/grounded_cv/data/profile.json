@@ -1,0 +1,102 @@
+{
+  "schema_version": "1.0",
+  "person": {
+    "name": "Prathamesh Kalamkar",
+    "headline": "Backend and applied AI engineer",
+    "location": "Dublin, Ireland",
+    "links": [
+      "https://github.com/prathamesh-git9"
+    ]
+  },
+  "retrieval_policy": {
+    "chunking": "One atomic, independently citable fact per chunk; headings are retained as metadata and no chunk crosses a section boundary.",
+    "verification": "Only the committed chunks below may support a claim. Missing evidence is reported as unsupported."
+  },
+  "chunks": [
+    {
+      "id": "identity.location",
+      "section": "identity",
+      "title": "Location",
+      "text": "Prathamesh Kalamkar is based in Dublin, Ireland.",
+      "source_uri": "cv://profile#identity.location"
+    },
+    {
+      "id": "summary.backend-ai",
+      "section": "summary",
+      "title": "Engineering focus",
+      "text": "Prathamesh builds backend services and applied AI systems with an emphasis on grounded outputs, bounded execution, and operational reliability.",
+      "source_uri": "cv://profile#summary.backend-ai"
+    },
+    {
+      "id": "skills.python",
+      "section": "skills",
+      "title": "Python",
+      "text": "Python experience includes typed service design, FastAPI, Pydantic, asynchronous I/O, pytest, and agent tooling.",
+      "source_uri": "cv://profile#skills.python"
+    },
+    {
+      "id": "skills.java-spring",
+      "section": "skills",
+      "title": "Java and Spring",
+      "text": "Java experience includes Spring Boot services, REST APIs, dependency injection, validation, and automated testing.",
+      "source_uri": "cv://profile#skills.java-spring"
+    },
+    {
+      "id": "skills.data",
+      "section": "skills",
+      "title": "Data systems",
+      "text": "Data engineering skills include SQL, relational data modelling, SQLite, idempotency, caching, and durable state transitions.",
+      "source_uri": "cv://profile#skills.data"
+    },
+    {
+      "id": "skills.delivery",
+      "section": "skills",
+      "title": "Delivery",
+      "text": "Delivery experience includes Docker, Git, GitHub Actions, offline test suites, linting, and continuous integration across supported Python versions.",
+      "source_uri": "cv://profile#skills.delivery"
+    },
+    {
+      "id": "skills.research",
+      "section": "skills",
+      "title": "Research systems",
+      "text": "Research tooling experience includes hybrid retrieval, source citations, robots-aware web access, public API integration, and treating fetched content as untrusted data.",
+      "source_uri": "cv://profile#skills.research"
+    },
+    {
+      "id": "project.mcp-suite",
+      "section": "projects",
+      "title": "MCP server suite",
+      "text": "The mcp-servers portfolio project provides five typed Model Context Protocol servers for grounded CV retrieval, repository intelligence, web research, ATS job discovery, and outcome idempotency.",
+      "source_uri": "https://github.com/prathamesh-git9/mcp-servers"
+    },
+    {
+      "id": "project.digital-twin",
+      "section": "projects",
+      "title": "Digital twin",
+      "text": "The digital-twin portfolio project demonstrates a recruiter-facing conversational agent with grounded responses and observable tool activity.",
+      "source_uri": "https://github.com/prathamesh-git9/digital-twin"
+    },
+    {
+      "id": "principles.failures",
+      "section": "engineering-principles",
+      "title": "Typed failures",
+      "text": "Prathamesh designs integration boundaries to return typed failures, enforce per-call deadlines, redact secrets, and avoid leaking low-level exceptions.",
+      "source_uri": "cv://profile#principles.failures"
+    },
+    {
+      "id": "principles.evidence",
+      "section": "engineering-principles",
+      "title": "Evidence discipline",
+      "text": "Claims are separated from evidence: retrieved sources remain untrusted, citations identify exact spans, and unsupported claims are rejected rather than embellished.",
+      "source_uri": "cv://profile#principles.evidence"
+    },
+    {
+      "id": "principles.safety",
+      "section": "engineering-principles",
+      "title": "Safe public research",
+      "text": "Public research components use explicit allow and deny rules, response size and redirect limits, per-host rate limiting, and robots.txt enforcement.",
+      "source_uri": "cv://profile#principles.safety"
+    }
+  ]
+}
+

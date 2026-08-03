@@ -1,0 +1,26 @@
+[build-system]
+requires = ["hatchling>=1.27"]
+build-backend = "hatchling.build"
+
+[project]
+name = "grounded-cv-mcp"
+version = "0.1.0"
+description = "Grounded structured CV retrieval and claim verification over MCP"
+requires-python = ">=3.11"
+license = "MIT"
+dependencies = [
+    "mcp>=2,<3",
+    "mcp-server-suite-common==0.1.0",
+    "pydantic>=2.12,<3",
+]
+
+[project.scripts]
+grounded-cv = "grounded_cv.server:main"
+grounded-cv-eval = "grounded_cv.eval:main"
+
+[tool.uv.sources]
+mcp-server-suite-common = { workspace = true }
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/grounded_cv"]
+

@@ -1,0 +1,13 @@
+[
+  {"query": "Where is Prathamesh based?", "relevant": ["identity.location"]},
+  {"query": "Python FastAPI and async API experience", "relevant": ["skills.python"]},
+  {"query": "Java Spring Boot REST services", "relevant": ["skills.java-spring"]},
+  {"query": "SQL database durability and idempotency", "relevant": ["skills.data"]},
+  {"query": "CI testing Docker GitHub Actions", "relevant": ["skills.delivery"]},
+  {"query": "RAG retrieval citations and web research", "relevant": ["skills.research", "principles.evidence"]},
+  {"query": "Model Context Protocol portfolio servers", "relevant": ["project.mcp-suite"]},
+  {"query": "How are integration failures kept safe?", "relevant": ["principles.failures"]},
+  {"query": "robots policy and rate limiting", "relevant": ["principles.safety"]},
+  {"query": "conversational recruiter digital twin", "relevant": ["project.digital-twin"]}
+]
+

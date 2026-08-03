@@ -1,0 +1,17 @@
+[build-system]
+requires = ["hatchling>=1.27"]
+build-backend = "hatchling.build"
+
+[project]
+name = "mcp-server-suite-common"
+version = "0.1.0"
+description = "Shared bounded execution and safety helpers for Prathamesh MCP servers"
+requires-python = ">=3.11"
+license = "MIT"
+dependencies = [
+    "httpx2>=2.5,<3",
+    "pydantic>=2.12,<3",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/mcp_server_common"]
