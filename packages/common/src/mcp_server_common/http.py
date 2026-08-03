@@ -16,6 +16,7 @@ class HttpPayload:
     status_code: int
     content_type: str
     body: bytes
+    headers: dict[str, str]
 
     def text(self) -> str:
         return self.body.decode("utf-8", errors="replace")
@@ -45,6 +46,7 @@ class HttpGateway:
         *,
         headers: dict[str, str] | None = None,
         params: dict[str, str | int] | None = None,
+        follow_redirects: bool = True,
     ) -> HttpPayload:
         request_headers = {"Accept": "application/json, text/html;q=0.9, */*;q=0.5"}
         request_headers["User-Agent"] = self.user_agent
@@ -53,7 +55,7 @@ class HttpGateway:
         try:
             async with httpx2.AsyncClient(
                 timeout=self.timeout_seconds,
-                follow_redirects=True,
+                follow_redirects=follow_redirects,
                 max_redirects=self.max_redirects,
                 transport=self.transport,
                 trust_env=False,
@@ -119,6 +121,7 @@ class HttpGateway:
             status_code=response.status_code,
             content_type=response.headers.get("content-type", ""),
             body=response.content,
+            headers=dict(response.headers),
         )
 
     async def get_json(self, url: str, **kwargs: Any) -> tuple[str, Any]:
