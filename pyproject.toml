@@ -1,10 +1,11 @@
 [project]
 name = "prathamesh-mcp-servers-workspace"
 version = "0.1.0"
-description = "Five bounded, typed MCP servers for research and recruiting workflows"
+description = "Six bounded, typed MCP servers for research, recruiting, and coding workflows"
 requires-python = ">=3.11"
 dependencies = [
     "ats-jobs-mcp",
+    "coding-workflows-mcp",
     "grounded-cv-mcp",
     "outcome-ledger-mcp",
     "repo-intel-mcp",
@@ -24,6 +25,7 @@ members = ["packages/*"]
 
 [tool.uv.sources]
 ats-jobs-mcp = { workspace = true }
+coding-workflows-mcp = { workspace = true }
 grounded-cv-mcp = { workspace = true }
 outcome-ledger-mcp = { workspace = true }
 repo-intel-mcp = { workspace = true }
