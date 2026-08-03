@@ -25,7 +25,9 @@ class WebResearchService:
         self.gateway = gateway or HttpGateway(timeout_seconds=8, max_bytes=2_000_000)
         self.url_policy = url_policy or UrlPolicy()
         self.limiter = limiter or HostRateLimiter(minimum_interval_seconds=0.6)
-        self.robots = robots or RobotsChecker(self.gateway, self.limiter)
+        self.robots = robots or RobotsChecker(
+            self.gateway, self.limiter, url_policy=self.url_policy
+        )
 
     async def search(self, query: str, *, limit: int = 5) -> list[SearchHit]:
         if not query.strip():

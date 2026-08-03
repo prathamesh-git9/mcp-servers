@@ -4,7 +4,7 @@ import asyncio
 import ipaddress
 import socket
 from collections.abc import Awaitable, Callable
-from urllib.parse import urlsplit
+from urllib.parse import urljoin, urlsplit
 from urllib.robotparser import RobotFileParser
 
 from mcp_server_common import Failure, FailureCode, ServiceError
@@ -44,7 +44,12 @@ class UrlPolicy:
             raise _blocked("The target host is outside the explicit allowlist.")
         if host == "localhost" or host.endswith((".localhost", ".local", ".internal")):
             raise _blocked("Local and internal hostnames are denied.")
-        addresses = await self._resolver(host)
+        try:
+            ipaddress.ip_address(host)
+        except ValueError:
+            addresses = await self._resolver(host)
+        else:
+            addresses = [host]
         if not addresses:
             raise _blocked("The target hostname did not resolve to a public address.")
         if any(not _is_public(address) for address in addresses):
@@ -59,34 +64,50 @@ class RobotsChecker:
         limiter: HostRateLimiter,
         *,
         user_agent: str = "prathamesh-mcp-servers",
+        url_policy: UrlPolicy | None = None,
     ) -> None:
         self.gateway = gateway
         self.limiter = limiter
         self.user_agent = user_agent
-        self._cache: TTLCache[tuple[str, bool]] = TTLCache(ttl_seconds=900)
+        self.url_policy = url_policy
+        self._cache: TTLCache[str] = TTLCache(ttl_seconds=900)
 
     async def allowed(self, url: str) -> tuple[bool, str]:
         parts = urlsplit(url)
         robots_url = f"{parts.scheme}://{parts.netloc}/robots.txt"
         cached = await self._cache.get(robots_url)
         if cached is not None:
-            _, allowed = cached
-            return allowed, robots_url
-        await self.limiter.wait(parts.hostname or "")
-        try:
-            payload = await self.gateway.get(robots_url, follow_redirects=False)
-        except ServiceError as exc:
-            if exc.failure.code == FailureCode.NOT_FOUND:
-                await self._cache.put(robots_url, ("", True))
-                return True, robots_url
-            raise _blocked(
-                "robots.txt could not be verified; access failed closed."
-            ) from exc
-        parser = RobotFileParser()
-        parser.set_url(robots_url)
-        parser.parse(payload.text().splitlines())
-        allowed = parser.can_fetch(self.user_agent, url)
-        await self._cache.put(robots_url, (payload.text(), allowed))
+            return _robots_allows(robots_url, cached, self.user_agent, url), robots_url
+        current = robots_url
+        payload = None
+        for _ in range(self.gateway.max_redirects + 1):
+            if self.url_policy is not None:
+                host = await self.url_policy.validate(current)
+            else:
+                host = urlsplit(current).hostname or ""
+            await self.limiter.wait(host)
+            try:
+                candidate = await self.gateway.get(current, follow_redirects=False)
+            except ServiceError as exc:
+                if exc.failure.code == FailureCode.NOT_FOUND:
+                    await self._cache.put(robots_url, "")
+                    return True, robots_url
+                raise _blocked(
+                    "robots.txt could not be verified; access failed closed."
+                ) from exc
+            if candidate.status_code in {301, 302, 303, 307, 308}:
+                location = candidate.headers.get("location")
+                if not location:
+                    raise _blocked("robots.txt redirected without a verifiable target.")
+                current = urljoin(current, location)
+                continue
+            payload = candidate
+            break
+        if payload is None:
+            raise _blocked("robots.txt exceeded the configured redirect limit.")
+        rules = payload.text()
+        allowed = _robots_allows(current, rules, self.user_agent, url)
+        await self._cache.put(robots_url, rules)
         return allowed, robots_url
 
 
@@ -106,6 +127,13 @@ def _is_public(address: str) -> bool:
     except ValueError:
         return False
     return value.is_global
+
+
+def _robots_allows(robots_url: str, rules: str, user_agent: str, target_url: str) -> bool:
+    parser = RobotFileParser()
+    parser.set_url(robots_url)
+    parser.parse(rules.splitlines())
+    return parser.can_fetch(user_agent, target_url)
 
 
 def _blocked(message: str) -> ServiceError:

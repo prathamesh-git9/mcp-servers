@@ -196,11 +196,8 @@ def create_server(service: RepoIntelService | None = None) -> MCPServer:
     return server
 
 
-server = create_server()
-
-
 def main() -> None:
-    server.run("stdio")
+    create_server().run("stdio")
 
 
 if __name__ == "__main__":

@@ -161,11 +161,8 @@ async def _async_detect(ats: AtsJobsService, url: str):
     return ats.detect_board(url)
 
 
-server = create_server()
-
-
 def main() -> None:
-    server.run("stdio")
+    create_server().run("stdio")
 
 
 if __name__ == "__main__":

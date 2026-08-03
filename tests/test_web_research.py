@@ -26,6 +26,16 @@ def _web_response(request: httpx2.Request) -> httpx2.Response:
     )
 
 
+def _redirect_response(request: httpx2.Request) -> httpx2.Response:
+    if request.url.path == "/robots.txt":
+        return httpx2.Response(
+            200,
+            text="User-agent: *\nAllow: /\n",
+            headers={"content-type": "text/plain"},
+        )
+    return httpx2.Response(302, headers={"location": "http://127.0.0.1/private"})
+
+
 def _service() -> WebResearchService:
     gateway = HttpGateway(
         transport=httpx2.MockTransport(_web_response),
@@ -74,6 +84,9 @@ async def test_allowlist_and_protocol_surfaces() -> None:
                 "allowed_hosts": ["another.example"],
             },
         )
+        robots_denied = await client.call_tool(
+            "fetch_page", {"url": "https://example.com/private/report"}
+        )
 
     assert {str(resource.uri) for resource in resources.resources} == {
         "research://policy",
@@ -82,3 +95,26 @@ async def test_allowlist_and_protocol_surfaces() -> None:
     assert {prompt.name for prompt in prompts.prompts} == {"source-backed-research"}
     assert allowed.structured_content["page"]["text"] == "Allowed\nPublic evidence."
     assert denied.structured_content["failure"]["code"] == "blocked"
+    assert robots_denied.structured_content["failure"]["details"]["policy"] == (
+        "robots_denied"
+    )
+
+
+@pytest.mark.asyncio
+async def test_redirect_to_private_network_is_revalidated_and_denied() -> None:
+    gateway = HttpGateway(transport=httpx2.MockTransport(_redirect_response))
+    limiter = HostRateLimiter(minimum_interval_seconds=0)
+    policy = UrlPolicy(resolver=_public_resolver)
+    service = WebResearchService(
+        gateway,
+        url_policy=policy,
+        limiter=limiter,
+        robots=RobotsChecker(gateway, limiter, url_policy=policy),
+    )
+    async with Client(create_server(service)) as client:
+        result = await client.call_tool(
+            "fetch_page", {"url": "https://example.com/redirect"}
+        )
+
+    assert result.structured_content["status"] == "error"
+    assert result.structured_content["failure"]["code"] == "blocked"
