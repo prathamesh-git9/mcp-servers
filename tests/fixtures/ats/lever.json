@@ -1,0 +1,15 @@
+{
+  "board_url": "https://jobs.lever.co/acme",
+  "expected_provider": "lever",
+  "expected_id": "lev-101",
+  "payload": [{
+    "id": "lev-101",
+    "text": "Platform Engineer",
+    "categories": {"location": "Remote - EU", "department": "Engineering", "commitment": "Full-time"},
+    "descriptionPlain": "Operate distributed services.",
+    "hostedUrl": "https://jobs.lever.co/acme/lev-101",
+    "applyUrl": "https://jobs.lever.co/acme/lev-101/apply",
+    "workplaceType": "remote"
+  }]
+}
+

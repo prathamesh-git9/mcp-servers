@@ -1,0 +1,19 @@
+{
+  "board_url": "https://acme.recruitee.com/",
+  "expected_provider": "recruitee",
+  "expected_id": "rec-101",
+  "payload": {
+    "offers": [{
+      "id": "rec-101",
+      "title": "Software Engineer",
+      "location": "Dublin, Ireland",
+      "department": {"name": "Engineering"},
+      "employment_type": "full_time",
+      "remote": "hybrid",
+      "description": "<p>Develop public APIs.</p>",
+      "careers_url": "https://acme.recruitee.com/o/software-engineer",
+      "published_at": "2026-08-01T12:00:00Z"
+    }]
+  }
+}
+

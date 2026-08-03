@@ -1,0 +1,19 @@
+{
+  "board_url": "https://careers.smartrecruiters.com/acme",
+  "expected_provider": "smartrecruiters",
+  "expected_id": "sr-101",
+  "payload": {
+    "totalFound": 1,
+    "content": [{
+      "id": "sr-101",
+      "name": "Senior Backend Engineer",
+      "company": {"identifier": "acme", "name": "Acme"},
+      "releasedDate": "2026-08-01T12:00:00Z",
+      "location": {"city": "Dublin", "country": "Ireland", "remote": true},
+      "department": {"label": "Engineering"},
+      "typeOfEmployment": {"label": "Full-time"},
+      "applyUrl": "https://jobs.smartrecruiters.com/acme/sr-101"
+    }]
+  }
+}
+

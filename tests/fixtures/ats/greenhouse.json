@@ -1,0 +1,17 @@
+{
+  "board_url": "https://job-boards.greenhouse.io/acme",
+  "expected_provider": "greenhouse",
+  "expected_id": "101",
+  "payload": {
+    "jobs": [{
+      "id": 101,
+      "title": "Backend Engineer",
+      "location": {"name": "Dublin"},
+      "departments": [{"name": "Engineering"}],
+      "content": "<p>Build reliable APIs.</p>",
+      "absolute_url": "https://job-boards.greenhouse.io/acme/jobs/101",
+      "updated_at": "2026-08-01T12:00:00Z"
+    }]
+  }
+}
+
