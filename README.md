@@ -252,6 +252,10 @@ network service.
   limits but is never returned or logged.
 - Tests run with outbound sockets disabled except loopback, require no keys, and use
   protocol clients plus committed provider fixtures.
+- The contract suite drives servers from `docs/manifest.json`, and a discovery test derives
+  the server list from `packages/` on disk and fails when the two disagree. A server added
+  without being declared would otherwise be skipped by every guard above while the suite
+  still reported success.
 
 ## Development
 
