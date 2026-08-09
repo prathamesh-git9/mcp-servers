@@ -8,6 +8,5 @@
   {"query": "Model Context Protocol portfolio servers", "relevant": ["project.mcp-suite"]},
   {"query": "How are integration failures kept safe?", "relevant": ["principles.failures"]},
   {"query": "robots policy and rate limiting", "relevant": ["principles.safety"]},
-  {"query": "conversational recruiter digital twin", "relevant": ["project.digital-twin"]}
+  {"query": "agentic recruiter digital twin with planning and tools", "relevant": ["project.agentic-digital-twin"]}
 ]
-

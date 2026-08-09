@@ -21,6 +21,18 @@ def test_hybrid_lookup_and_claim_verification() -> None:
     assert unsupported[0].citations == []
 
 
+def test_agentic_digital_twin_is_the_canonical_project_name() -> None:
+    service = GroundedCVService()
+
+    hits = service.lookup("agentic recruiter digital twin planning tools", limit=3)
+
+    project = next(
+        hit.chunk for hit in hits if hit.chunk.id == "project.agentic-digital-twin"
+    )
+    assert project.title == "Agentic digital twin"
+    assert "plans from a hiring goal" in project.text
+
+
 def test_committed_eval_has_strong_retrieval_metrics() -> None:
     metrics = evaluate(k=5)
 

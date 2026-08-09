@@ -70,11 +70,11 @@
       "source_uri": "https://github.com/prathamesh-git9/mcp-servers"
     },
     {
-      "id": "project.digital-twin",
+      "id": "project.agentic-digital-twin",
       "section": "projects",
-      "title": "Digital twin",
-      "text": "The digital-twin portfolio project demonstrates a recruiter-facing conversational agent with grounded responses and observable tool activity.",
-      "source_uri": "https://github.com/prathamesh-git9/digital-twin"
+      "title": "Agentic digital twin",
+      "text": "The agentic-digital-twin portfolio project demonstrates a bounded recruiter-facing agentic digital twin that plans from a hiring goal, selects relevant public tools, retrieves grounded evidence, and exposes its verification outcome.",
+      "source_uri": "https://github.com/prathamesh-git9/agentic-digital-twin"
     },
     {
       "id": "principles.failures",
@@ -99,4 +99,3 @@
     }
   ]
 }
-
